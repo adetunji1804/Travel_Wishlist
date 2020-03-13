@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Place
 from .forms import NewPlaceForm
 
-# Create your views here.
-
 
 def place_list(request):
     """
@@ -26,10 +24,10 @@ def place_list(request):
     # If not a POST, or the form is not valid, render the page with the form to
     # add a new place, and list of places
 
-    # places = Place.objects.all() // fetch all in object
-    # places = Place.objects.filter(visited=False) //only the visited country
-    places = Place.objects.filter(visited=False).order_by("name")
+    
+    #display non visited countries, use name column to order the list
     new_place_form = NewPlaceForm()
+    places = Place.objects.filter(visited=False).order_by("name") 
     return render(
         request,
         "wishlist/wishlist.html",
@@ -38,21 +36,11 @@ def place_list(request):
 
 
 def places_visited(request):
-    visited = Place.objects.filter(visited=True)
+    visited = Place.objects.filter(visited=True) #display visited countries
     return render(request, "wishlist/visited.html", {"visited": visited})
 
 
-#alternative
-def place_was_visited(request):
-    if request.method == 'POST':
-        pk = request.POST.get('pk')
-        place = Place.objects.get(pk=pk)
-        place.visited = True
-        place.save()
-
-    return redirect('place_list')
-
-
+# handling a post request with PK not in database
 def place_was_visited(request):
     if request.method == 'POST':
         pk =request.POST.get('pk')
@@ -61,11 +49,3 @@ def place_was_visited(request):
         place.save()
 
     return redirect('place_list')
-'''
-#alternative for one line filter
-def place_was_visited(request):
-    if request.method == 'POST':
-        place = Place.objects.filter(pk=pk).update(visited=True)
-
-    return redirect('place_list')
-'''

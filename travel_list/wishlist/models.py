@@ -1,7 +1,6 @@
 from django.db import models
 
-# Create your models here.
-
+#class model with 2 attributes
 
 class Place(models.Model):
     name = models.CharField(max_length=200)
